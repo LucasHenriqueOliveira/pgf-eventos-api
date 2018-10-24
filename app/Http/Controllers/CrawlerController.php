@@ -26,7 +26,7 @@ class CrawlerController extends Controller
                 break;
             case 'modelos':
                 try {
-                    $marcas = DB::select("SELECT * FROM `marcas` where id > 127");
+                    $marcas = DB::select("SELECT * FROM `marcas`");
                     
                     foreach ($marcas as $marca) {
                         $url = 'http://fipeapi.appspot.com/api/1/carros/veiculos/' . $marca->id . '.json';
