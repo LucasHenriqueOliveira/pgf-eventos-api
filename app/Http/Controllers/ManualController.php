@@ -32,6 +32,7 @@ class ManualController extends Controller
 
     public function get(Request $request) {
         return DB::select("SELECT `man`.`id`, `man`.`item`, `man`.`km`, `man`.`tempo`, `mod`.`nome` as `modelo`, `mar`.`nome` as `marca`, `mod`.`id` as `id_modelo`, `mar`.`id` as `id_marca`
-        FROM `manual` AS `man` INNER JOIN `modelos` AS `mod` ON `man`.`id_modelo` = `mod`.`id` INNER JOIN `marcas` AS `mar` ON `man`.`id_marca` = `mar`.`id`");
+        FROM `manual` AS `man` INNER JOIN `modelos` AS `mod` ON `man`.`id_modelo` = `mod`.`id` INNER JOIN `marcas` AS `mar` ON `man`.`id_marca` = `mar`.`id`
+        WHERE `man`.`active` = 1");
     }
 }
