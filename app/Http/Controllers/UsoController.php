@@ -9,14 +9,14 @@ use Symfony\Component\HttpFoundation\Response;
 class UsoController extends Controller
 {
     public function get(Request $request) {
-        return DB::select("SELECT * FROM `condicoes_uso` WHERE `active` = 1");
+        return DB::select("SELECT * FROM `palestrante` WHERE `ativo` = 1");
     }
 
     public function save(Request $request) {
         try {
-            DB::insert('INSERT INTO `condicoes_uso` (`pergunta`) VALUES (?)', [$request->pergunta]);
-            $list = DB::select("SELECT * FROM `condicoes_uso` WHERE `active` = 1");
-            $message = 'Condições de uso inserido com sucesso.';
+            DB::insert('INSERT INTO `palestrante` (`nome`, `sobre`) VALUES (?, ?)', [$request->nome, $request->sobre]);
+            $list = DB::select("SELECT * FROM `palestrante` WHERE `ativo` = 1");
+            $message = 'Palestrante inserido com sucesso.';
             return $this->successResponse($list, $message);
         } catch (Exception $e) {
             return $this->failedResponse();
@@ -38,9 +38,20 @@ class UsoController extends Controller
 
     public function remove(Request $request, $id) {
         try {
-            DB::update('UPDATE condicoes_uso SET `active` = ? WHERE id = ?', [0, $id]);
-            $list = DB::select("SELECT * FROM `condicoes_uso` WHERE `active` = 1");
-            $message = 'Condições de uso deletado com sucesso.';
+            DB::update('UPDATE palestrante SET `ativo` = ? WHERE id = ?', [0, $id]);
+            $list = DB::select("SELECT * FROM `palestrante` WHERE `ativo` = 1");
+            $message = 'Palestrante removido com sucesso.';
+            return $this->successResponse($list, $message);
+        } catch (Exception $e) {
+            return $this->failedResponse();
+        }
+    }
+
+    public function edit(Request $request) {
+        try {
+            DB::update('UPDATE palestrante SET `nome` = ?, `sobre` = ? WHERE id = ?', [$request->nome, $request->sobre, $request->id]);
+            $list = DB::select("SELECT * FROM `palestrante` WHERE `ativo` = 1");
+            $message = 'Palestrante alterado com sucesso.';
             return $this->successResponse($list, $message);
         } catch (Exception $e) {
             return $this->failedResponse();
