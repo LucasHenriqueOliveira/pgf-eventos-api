@@ -17,6 +17,37 @@ class ProgramacaoController extends Controller
         ORDER BY `programacao`.`id` ASC");
     }
 
+    public function getListProgramacao(Request $request) {
+        $arrList = array();
+        $arrData = array();
+        $arrProgramacao = DB::select("SELECT *, CONCAT(SUBSTRING(`dia`, 7, 4), SUBSTRING(`dia`, 4, 2), SUBSTRING(`dia`, 1, 2)) 
+            AS `dia_order` FROM `programacao` WHERE `ativo` = 1 ORDER BY `dia_order`, `hora_inicio` ASC");
+
+        foreach($arrProgramacao as $key => $programacao) {
+            if (!in_array($programacao->dia, $arrData)) { 
+                array_push($arrData, $programacao->dia);
+            }
+        }
+
+        foreach($arrData as $key => $data) {
+            $arrList[$key]['data'] = $data;
+            $arrList[$key]['programacao'] = [];
+        }
+
+        foreach($arrList as $key => $data) {
+            
+            foreach($arrProgramacao as $programacao) {
+
+                if($data['data'] == $programacao->dia) {
+                    array_push($arrList[$key]['programacao'], $programacao);
+                }
+            }
+        }
+        
+
+        return $arrList;
+    }
+
     public function getList(Request $request, $id) {
         return DB::select("SELECT `name`, `email` 
         FROM `programacao` INNER JOIN `users_programacao` 

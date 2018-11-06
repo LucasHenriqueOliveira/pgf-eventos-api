@@ -9,6 +9,7 @@ Route::group([
     Route::get('dashboard', 'DashboardController@get');
 
     Route::get('programacao', 'ProgramacaoController@get');
+    Route::get('programacao-list', 'ProgramacaoController@getListProgramacao');
     Route::get('programacao/{id}', 'ProgramacaoController@getList');
     Route::post('programacao', 'ProgramacaoController@save');
     Route::post('programacao-edit', 'ProgramacaoController@edit');
@@ -21,6 +22,7 @@ Route::group([
     Route::delete('status/{id}', 'StatusController@remove');
 
     Route::get('uso', 'UsoController@get');
+    Route::get('uso/{id}', 'UsoController@getPalestrante');
     Route::post('uso', 'UsoController@save');
     Route::put('uso', 'UsoController@edit');
     Route::delete('uso/{id}', 'UsoController@remove');

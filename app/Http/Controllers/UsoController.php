@@ -12,6 +12,27 @@ class UsoController extends Controller
         return DB::select("SELECT * FROM `palestrante` WHERE `ativo` = 1");
     }
 
+    public function getPalestrante(Request $request, $id) {
+        try {
+            $arrList = array();
+            $palestrante = DB::select("SELECT * FROM `palestrante` WHERE `ativo` = 1 AND id = ?", [$id])[0];
+
+            $arrList['palestrante'] = $palestrante;
+
+            $arrProgramacao = DB::select("SELECT *, CONCAT(SUBSTRING(`dia`, 7, 4), SUBSTRING(`dia`, 4, 2), SUBSTRING(`dia`, 1, 2)) 
+                AS `dia_order`
+                FROM `programacao`
+                WHERE `id_palestrante` = ?
+                ORDER BY `dia_order`, `hora_inicio` ASC", [$palestrante->id]);
+
+            $arrList['programacao'] = $arrProgramacao;
+
+            return $arrList;
+        } catch (Exception $e) {
+            return $this->failedResponse();
+        }
+    }
+
     public function save(Request $request) {
         try {
             DB::insert('INSERT INTO `palestrante` (`nome`, `sobre`) VALUES (?, ?)', [$request->nome, $request->sobre]);
