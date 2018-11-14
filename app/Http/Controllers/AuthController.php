@@ -32,13 +32,20 @@ class AuthController extends Controller
             return response()->json(['error' => 'Email ou senha não existe.'], 401);
         }
 
+        if (!auth()->user()->ativo) {
+            return response()->json(['error' => 'Cadastro não validado! Por favor, verifique o seu email.'], 401);
+        }
+
         return $this->respondWithToken($token);
     }
 
     public function signup(SignUpRequest $request)
     {
-        User::create($request->all());
-        return $this->login($request);
+        //return response()->json($request);
+        // User::create($request->all());
+        // return $this->login($request);
+        return app(\App\Http\Controllers\UsuarioController::class)->signup($request);
+        //return UsuarioController::signup($request->all());
     }
 
     /**

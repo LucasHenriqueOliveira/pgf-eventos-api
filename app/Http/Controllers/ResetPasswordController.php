@@ -48,13 +48,13 @@ class ResetPasswordController extends Controller {
 
     public function failedResponse(){
         return response()->json([
-            'error' => 'Email does\'t found on our database'
+            'error' => 'Email não encontrado.'
         ], Response::HTTP_NOT_FOUND);
     }
 
     public function successResponse() {
         return response()->json([
-            'data' => 'Reset Email is send successfully, please check your inbox.'
+            'data' => 'Enviamos um email com a troca de senha. Por favor verifique sua caixa.'
         ], Response::HTTP_OK);
     }
 }

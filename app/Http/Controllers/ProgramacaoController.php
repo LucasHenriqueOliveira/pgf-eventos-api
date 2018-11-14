@@ -43,7 +43,6 @@ class ProgramacaoController extends Controller
                 }
             }
         }
-        
 
         return $arrList;
     }
@@ -142,6 +141,158 @@ class ProgramacaoController extends Controller
             
             $list = $this->get($request);
             $message = 'Programação alterada com sucesso.';
+            return $this->successResponse($list, $message);
+        } catch (Exception $e) {
+            return $this->failedResponse();
+        }
+    }
+
+    public function getEvento(Request $request, $id) {
+        $arrList = array();
+        $arrProgramacao = DB::select("SELECT *
+            FROM `programacao` INNER JOIN `palestrante` 
+            ON `programacao`.`id_palestrante` =  `palestrante`.`id` 
+            WHERE `programacao`.`id` = ?", [$id]);
+
+        $inscritos = DB::select("SELECT count(*) AS `inscritos` FROM `users_programacao` 
+            WHERE `id_programacao` = ? AND `ativo`= 1", [$id])[0];
+
+        $arrData['evento'] = $arrProgramacao[0];
+        $arrData['evento']->inscritos = $inscritos->inscritos;
+        
+        $arrPerguntas = DB::select("SELECT `pergunta`.*, `users`.`name`, `users`.`email`, 
+            DATE_FORMAT(`pergunta`.`data`, '%d/%m/%Y %H:%i') AS `data_pergunta` 
+            FROM `pergunta` 
+            INNER JOIN `users` ON `pergunta`.`id_user` = `users`.`id` 
+            INNER JOIN `programacao` ON `pergunta`.`id_programacao` = `programacao`.`id` 
+            WHERE `id_programacao` = ?
+            ORDER BY `pergunta`.`id` DESC", [$id]);
+
+        foreach($arrPerguntas as $key => $pergunta) {
+
+            $arrList[$key]['pergunta'] = $pergunta;
+
+            $arrRespostas = DB::select("SELECT `resposta`.*, `users`.`name`, `users`.`email`, 
+                DATE_FORMAT(`resposta`.`data`, '%d/%m/%Y %H:%i') AS `data_resposta` 
+                FROM `resposta` 
+                INNER JOIN `users` ON `resposta`.`id_user` = `users`.`id` 
+                INNER JOIN `pergunta` ON `pergunta`.`id` = `resposta`.`id_pergunta` 
+                WHERE `id_pergunta` = ?
+                ORDER BY `resposta`.`id` ASC", [$pergunta->id]);
+
+            $arrList[$key]['respostas'] = $arrRespostas;
+        }
+        $arrData['perguntas'] = $arrList;
+
+        return $arrData;
+    }
+
+    public function setInscricao(Request $request) {
+        try {
+            DB::insert('INSERT INTO `users_programacao` (`id_user`, `id_programacao`) VALUES (?, ?)', 
+                [$request->id_user, $request->id_programacao]);
+
+            $list = app(\App\Http\Controllers\UsuarioController::class)->getUser($request, $request->id_user);
+            $message = 'Inscrição realizada com sucesso!';
+
+            return $this->successResponse($list, $message);
+        } catch (Exception $e) {
+            return $this->failedResponse();
+        }
+    }
+
+    public function removeInscricao(Request $request) {
+        try {
+            DB::update('UPDATE `users_programacao` SET `ativo` = 0 WHERE `id_user` = ? AND `id_programacao` = ?',
+                [$request->id_user, $request->id_programacao]);
+
+            $list = app(\App\Http\Controllers\UsuarioController::class)->getUser($request, $request->id_user);
+            $message = 'Inscrição cancelada com sucesso!';
+
+            return $this->successResponse($list, $message);
+        } catch (Exception $e) {
+            return $this->failedResponse();
+        }
+    }
+
+    public function finalizar(Request $request) {
+        try {
+            DB::update('UPDATE `programacao` SET `conclusao` = ?, `votacao` = 1 WHERE `id` = ?',
+                [$request->conclusao, $request->id]);
+
+            $list = $this->get($request);
+            $message = 'Oficina finalizada com sucesso!';
+
+            return $this->successResponse($list, $message);
+        } catch (Exception $e) {
+            return $this->failedResponse();
+        }
+    }
+
+    public function desabilitar(Request $request) {
+        try {
+            DB::update('UPDATE `programacao` SET `votacao` = 0 WHERE `id` = ?',
+                [$request->id]);
+
+            $list = $this->get($request);
+            $message = 'Desabilitada a votação da oficina com sucesso!';
+
+            return $this->successResponse($list, $message);
+        } catch (Exception $e) {
+            return $this->failedResponse();
+        }
+    }
+
+    public function getVotacao(Request $request, $id) {
+        $arrList = array();
+        $arr = array();
+
+        $arrOficinas = DB::select("SELECT *, `programacao`.`id` AS `id_programacao` 
+        FROM `programacao` INNER JOIN `palestrante` 
+        ON `programacao`.`id_palestrante` =  `palestrante`.`id` WHERE `programacao`.`ativo` = 1
+        AND `programacao`.`votacao` = 1 AND `programacao`.`tipo` = 'Oficina'
+        ORDER BY `programacao`.`id` ASC");
+
+        $arrList['oficinas'] = $arrOficinas;
+
+        $arrVotados = DB::select("SELECT * FROM `votacao` WHERE `id_user` = ?", [$id]);
+        $arrList['votados'] = $arrVotados;
+
+        return $arrList;
+    }
+
+    public function getVotacaoDetalhada(Request $request, $id, $id_user) {
+
+        $result = DB::select("SELECT *, `programacao`.`id` AS `id_programacao` 
+        FROM `programacao` INNER JOIN `palestrante` ON `programacao`.`id_palestrante` =  `palestrante`.`id`
+        WHERE `programacao`.`id` = ?", [$id]);
+
+        $arrVoto = DB::select("SELECT * FROM `votacao` WHERE `id_user` = ? AND `id_programacao` = ?", [$id_user, $id]);
+        
+        if(count($arrVoto)) {
+            $result[0]->voto = $arrVoto[0]->voto;
+        } else {
+            $result[0]->voto = null;
+        }
+
+        return $result;
+    }
+
+    public function saveVoto(Request $request) {
+        try {
+
+            $result = DB::select("SELECT * FROM `votacao` WHERE `id_user` = ? AND `id_programacao` = ?", [$request->id_user, $request->id_programacao]);
+
+            if(count($result)) {
+                DB::update('UPDATE `votacao` SET `voto` = ?, `data` = ? WHERE `id` = ?', [$request->voto, NOW(), $result[0]->id]);
+            } else {
+                DB::insert('INSERT INTO `votacao` (`id_user`, `id_programacao`, `voto`, `data`) VALUES (?, ?, ?, ?)', 
+                [$request->id_user, $request->id_programacao, $request->voto, NOW()]);
+            }
+
+            $list = [];
+            $message = 'Voto salvo com sucesso!';
+
             return $this->successResponse($list, $message);
         } catch (Exception $e) {
             return $this->failedResponse();

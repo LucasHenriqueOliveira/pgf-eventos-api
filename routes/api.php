@@ -8,16 +8,26 @@ Route::group([
 
     Route::get('dashboard', 'DashboardController@get');
 
+    Route::get('evento/{id}', 'ProgramacaoController@getEvento');
     Route::get('programacao', 'ProgramacaoController@get');
     Route::get('programacao-list', 'ProgramacaoController@getListProgramacao');
     Route::get('programacao/{id}', 'ProgramacaoController@getList');
+    Route::get('votacao/{id}', 'ProgramacaoController@getVotacao');
+    Route::get('votacao-detalhada/{id}/{id_user}', 'ProgramacaoController@getVotacaoDetalhada');
+    Route::post('voto', 'ProgramacaoController@saveVoto');
     Route::post('programacao', 'ProgramacaoController@save');
     Route::post('programacao-edit', 'ProgramacaoController@edit');
+    Route::post('inscricao', 'ProgramacaoController@setInscricao');
+    Route::post('programacao-finalizar', 'ProgramacaoController@finalizar');
+    Route::post('programacao-desabilitar', 'ProgramacaoController@desabilitar');
+    Route::post('inscricao-cancelar', 'ProgramacaoController@removeInscricao');
     Route::delete('programacao/{id}', 'ProgramacaoController@remove');
 
     Route::get('status', 'StatusController@get');
     Route::get('status/{id}', 'StatusController@getPerguntas');
     Route::post('status', 'StatusController@save');
+    Route::post('resposta', 'StatusController@save');
+    Route::post('pergunta', 'StatusController@savePergunta');
     Route::put('status', 'StatusController@edit');
     Route::delete('status/{id}', 'StatusController@remove');
 
@@ -27,7 +37,10 @@ Route::group([
     Route::put('uso', 'UsoController@edit');
     Route::delete('uso/{id}', 'UsoController@remove');
 
+    Route::get('users/validar/{token}', 'UsuarioController@User');
     Route::get('users', 'UsuarioController@get');
+    Route::get('user/{id}', 'UsuarioController@getUser');
+    Route::post('user/reset', 'ResetPasswordController@sendEmail');
 
     Route::post('login', 'AuthController@login');
     Route::post('signup', 'AuthController@signup');

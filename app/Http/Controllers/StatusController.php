@@ -17,7 +17,21 @@ class StatusController extends Controller
             DB::insert('INSERT INTO `resposta` (`resposta`, `id_pergunta`, `id_user`, `data`) VALUES (?, ?, ?, ?)', 
             [$request->resposta, $request->id_pergunta, $request->id_user, NOW()]);
             $list = $this->getPerguntas($request, $request->id_programacao);
-            return $this->successResponse($list);
+            $message = 'Resposta inserida com sucesso!';
+            return $this->successResponse($list, $message);
+        } catch (Exception $e) {
+            return $this->failedResponse();
+        }
+    }
+
+    public function savePergunta(Request $request) {
+        try {
+            DB::insert('INSERT INTO `pergunta` (`pergunta`, `id_programacao`, `id_user`, `data`) VALUES (?, ?, ?, ?)', 
+            [$request->pergunta, $request->id_programacao, $request->id_user, NOW()]);
+
+            $list = $this->getPerguntas($request, $request->id_programacao);
+            $message = 'Pergunta enviada com sucesso!';
+            return $this->successResponse($list, $message);
         } catch (Exception $e) {
             return $this->failedResponse();
         }
@@ -29,10 +43,10 @@ class StatusController extends Controller
         ], Response::HTTP_NOT_FOUND);
     }
 
-    public function successResponse($data) {
+    public function successResponse($data, $message) {
         return response()->json([
             'data' => $data,
-            'message' => 'Status inserido com sucesso.'
+            'message' => $message
         ], Response::HTTP_OK);
     }
 
