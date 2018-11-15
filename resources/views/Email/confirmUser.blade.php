@@ -3,13 +3,13 @@
         <title>PFE - INSS</title>
     </head>
     <body>
-        <div class="container">
+        <div style="margin-top:40px; padding: 30px;">
         	<h1>Validação de Usuário</h1>
-        	<br><br>
+        	<br>
             
             <h4>{{ $message }}</h4>
 
-			<br><br>
+			<br>
             Obrigado,<br>
 			PFE - Eventos
         </div>

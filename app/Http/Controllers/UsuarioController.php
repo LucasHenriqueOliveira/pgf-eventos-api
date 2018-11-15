@@ -73,10 +73,10 @@ class UsuarioController extends Controller
         if(count($user)) {
             DB::update('UPDATE `users` SET `ativo` = ? WHERE id = ?', [1, $user[0]->id]);
 
-            new ConfirmUserMail('Usuário validado com sucesso. Favor abrir o aplicativo e fazer login.');
+            return new ConfirmUserMail('Usuário validado com sucesso. Favor abrir o aplicativo e fazer login.');
 
         } else {
-            new ConfirmUserMail('A validação falhou. Tente novamente!');
+            return new ConfirmUserMail('A validação falhou. Tente novamente!');
         }
     }
 
