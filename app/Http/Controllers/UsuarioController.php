@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 use Mailgun\Mailgun;
+use App\Mail\ConfirmUserMail;
 
 class UsuarioController extends Controller
 {
@@ -72,14 +73,10 @@ class UsuarioController extends Controller
         if(count($user)) {
             DB::update('UPDATE `users` SET `ativo` = ? WHERE id = ?', [1, $user[0]->id]);
 
-            return response()->json([
-                'message' => 'Usuário validado com sucesso. Favor abrir o aplicativo e fazer login.'
-            ], Response::HTTP_OK);
+            new ConfirmUserMail('Usuário validado com sucesso. Favor abrir o aplicativo e fazer login.');
 
         } else {
-            return response()->json([
-                'error' => 'A validação falhou. Tente novamente!'
-            ], Response::HTTP_NOT_FOUND);
+            new ConfirmUserMail('A validação falhou. Tente novamente!');
         }
     }
 
