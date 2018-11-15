@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SignUpRequest;
+use App\Http\Requests\ResetPasswordRequest;
 use App\User;
 
 class AuthController extends Controller
@@ -16,7 +17,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'signup']]);
+        $this->middleware('auth:api', ['except' => ['login', 'signup', 'reset']]);
     }
 
     /**
@@ -46,6 +47,10 @@ class AuthController extends Controller
         // return $this->login($request);
         return app(\App\Http\Controllers\UsuarioController::class)->signup($request);
         //return UsuarioController::signup($request->all());
+    }
+
+    public function reset(ResetPasswordRequest $request) {
+        return app(\App\Http\Controllers\ResetPasswordController::class)->sendEmail($request);
     }
 
     /**

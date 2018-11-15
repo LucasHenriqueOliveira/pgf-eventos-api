@@ -3,7 +3,7 @@
 
 Clique no botão abaixo para trocar sua senha
 
-@component('mail::button', ['url' => 'http://localhost:4200/response-password-reset?token='.$token])
+@component('mail::button', ['url' => 'https://pfe-eventos.herokuapp.com/api/users/response-password-reset/'.$token])
 Nova senha
 @endcomponent
 

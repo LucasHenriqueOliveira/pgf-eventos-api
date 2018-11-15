@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 use Mailgun\Mailgun;
-use App\Mail\ConfirmUserMail;
+use App\Mail\ChangePassword;
 
 class UsuarioController extends Controller
 {
@@ -77,6 +77,18 @@ class UsuarioController extends Controller
 
         } else {
             return new ConfirmUserMail('A validação falhou. Tente novamente!');
+        }
+    }
+
+    public function passwordReset(Request $request, $token){
+        $user = DB::select("SELECT * FROM `password_resets` WHERE `token` = ?", [$token]);
+
+        if(count($user)) {
+            
+            return new ChangePassword($user[0]->email, '');
+
+        } else {
+            return new ChangePassword('', 'Usuário não encontrado!');
         }
     }
 

@@ -38,13 +38,14 @@ Route::group([
     Route::delete('uso/{id}', 'UsoController@remove');
 
     Route::get('users/validar/{token}', 'UsuarioController@validarUser');
+    Route::get('users/response-password-reset/{token}', 'UsuarioController@passwordReset');
     Route::get('users', 'UsuarioController@get');
     Route::get('user/{id}', 'UsuarioController@getUser');
-    Route::post('user/reset', 'ResetPasswordController@sendEmail');
 
     Route::post('login', 'AuthController@login');
     Route::post('signup', 'AuthController@signup');
     Route::post('logout', 'AuthController@logout');
+    Route::post('reset', 'AuthController@reset');
     Route::post('refresh', 'AuthController@refresh');
     Route::post('me', 'AuthController@me');
     Route::post('sendPasswordResetLink', 'ResetPasswordController@sendEmail');

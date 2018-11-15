@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\ResetPasswordMail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Mailgun\Mailgun;
 
 class ResetPasswordController extends Controller {
     
@@ -21,7 +22,28 @@ class ResetPasswordController extends Controller {
 
     public function send($email) {
         $token = $this->createToken($email);
-        Mail::to($email)->send(new ResetPasswordMail($token));
+        $this->email($email, $token);
+        //Mail::to($email)->send(new ResetPasswordMail($token));
+    }
+
+    public function email($email, $token){
+
+        $url = 'https://pfe-eventos.herokuapp.com/api/users/response-password-reset/'.$token;
+
+        $texto = '<br /> Prezado(a),';
+        $texto .= '<br /><br />Clique no link abaixo para uma nova senha';
+        $texto .= '<br /><br /> <a href="'. $url .'">Nova Senha</a>';
+        $texto .= '<br /><br /> Att, <br />PFE INSS';
+        $texto .= '<br /><br /> <h5>Não responda a este email. Os emails enviados a este endereço não serão respondidos.</h5>';
+
+
+        $mg = Mailgun::create(getenv("MAILGUN_KEY"));
+        $mg->messages()->send(getenv("MAILGUN_DOMAIN"), [
+            'from' => "PFE INSS <postmaster@cidadaniaativa.com.br>",
+            'to'      => $email,
+            'subject' => 'Nova Senha',
+            'html'    => $texto
+        ]);
     }
 
     public function createToken($email) {
