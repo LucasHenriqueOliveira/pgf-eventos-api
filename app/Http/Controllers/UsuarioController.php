@@ -59,7 +59,7 @@ class UsuarioController extends Controller
 
     	$mg = Mailgun::create(getenv("MAILGUN_KEY"));
         $mg->messages()->send(getenv("MAILGUN_DOMAIN"), [
-            'from' => "PFE INSS <postmaster@lucashenrique.me>",
+            'from' => "PFE INSS <postmaster@cidadaniaativa.com.br>",
             'to'      => $email,
             'subject' => 'Cadastro de Usuário',
             'html'    => $texto
