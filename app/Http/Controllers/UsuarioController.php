@@ -31,7 +31,7 @@ class UsuarioController extends Controller
     			DB::insert('INSERT INTO `users` (`name`, `email`, `password`, `created_at`, `token`) VALUES (?, ?, ?, ?, ?)', 
 	            [$request->name, $request->email, Hash::make($request->password), NOW(), $token]);
 
-	            //$this->sendEmail($request->name, $request->email, $token);
+	            $this->sendEmail($request->name, $request->email, $token);
 	            
 	            return $this->successResponse();
 
