@@ -48,7 +48,7 @@ class UsuarioController extends Controller
 
     public function sendEmail($name, $email, $token){
 
-        $url = 'http://lucashenrique.me/pfe/api/users/validar/'.$token;
+        $url = 'https://pfe-eventos.herokuapp.com/api/users/validar/'.$token;
 
         $texto = '<br /> Prezado(a) ' . $name . ',';
         $texto .= '<br /><br />Falta pouco para finalizar a verificação da sua conta. Clique no link abaixo e faça a validação:';
