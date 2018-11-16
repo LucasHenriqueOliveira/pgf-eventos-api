@@ -30,7 +30,7 @@ class ChangePassword extends Mailable
     public function build()
     {
         return $this->markdown('changePassword')->with([
-            'email' => $this->email
+            'email' => $this->email,
             'message' => $this->message
         ]);
     }

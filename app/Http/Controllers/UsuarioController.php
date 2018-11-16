@@ -71,7 +71,7 @@ class UsuarioController extends Controller
         $user = DB::select("SELECT * FROM `users` WHERE `token` = ?", [$token]);
 
         if(count($user)) {
-            DB::update('UPDATE `users` SET `ativo` = ? WHERE id = ?', [1, $user[0]->id]);
+            DB::update('UPDATE `users` SET `ativo` = ?, `email_verified_at` = ? WHERE id = ?', [1, NOW(), $user[0]->id]);
 
             return new ConfirmUserMail('Usuário validado com sucesso. Favor abrir o aplicativo e fazer login.');
 
@@ -90,6 +90,11 @@ class UsuarioController extends Controller
         } else {
             return new ChangePassword('', 'Usuário não encontrado!');
         }
+    }
+
+    public function passwordChange(Request $request){
+        return DB::update('UPDATE `users` SET `password` = ?, `updated_at` = ? WHERE `email` = ?', 
+            [Hash::make($request->password), NOW(), $request->email]);
     }
 
     public function failedResponse(){

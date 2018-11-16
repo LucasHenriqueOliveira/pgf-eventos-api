@@ -41,6 +41,7 @@ Route::group([
     Route::get('users/response-password-reset/{token}', 'UsuarioController@passwordReset');
     Route::get('users', 'UsuarioController@get');
     Route::get('user/{id}', 'UsuarioController@getUser');
+    Route::post('users/change-password', 'UsuarioController@passwordChange');
 
     Route::post('login', 'AuthController@login');
     Route::post('signup', 'AuthController@signup');
