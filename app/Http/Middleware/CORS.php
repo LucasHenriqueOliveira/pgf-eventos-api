@@ -15,7 +15,7 @@ class CORS
      */
     public function handle($request, Closure $next)
     {
-        header('Access-Control-Allow-Origin: https://vadimdez.github.io');
+        header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Methods: GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS');
         header('Access-Control-Allow-Headers: Content-type, X-Auth-Token, Authorization, Origin');
         return $next($request);

@@ -45,7 +45,7 @@
                     $("button#submit").click(function(){
                         $.ajax({
                             type: "POST",
-                            url: "http://localhost:8000/api/users/change-password",
+                            url: "https://pfe-eventos.herokuapp.com/api/users/change-password",
                             dataType: "json",
                             data: $('form.form').serialize(),
                             success: function(msg){
