@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 class UsoController extends Controller
 {
     public function get(Request $request) {
-        return DB::select("SELECT * FROM `palestrante` WHERE `ativo` = 1");
+        return DB::select("SELECT * FROM `palestrante` WHERE `ativo` = 1 ORDER BY `nome` ASC");
     }
 
     public function getPalestrante(Request $request, $id) {
