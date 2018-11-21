@@ -189,6 +189,27 @@ class ProgramacaoController extends Controller
 
     public function setInscricao(Request $request) {
         try {
+            $evento = DB::select("SELECT * FROM `programacao` WHERE `id` = ?", [$request->id_programacao])[0];
+            $eventosInscritos = DB::select("SELECT * FROM `users_programacao` INNER JOIN `programacao` 
+                ON `programacao`.`id` = `users_programacao`.`id_programacao` 
+                WHERE `users_programacao`.`id_user` = ? AND `users_programacao`.`ativo` = 1", 
+                [$request->id_user]);
+
+            $hora_inicio_evento = strtotime($evento->hora_inicio);
+            $hora_fim_evento = strtotime($evento->hora_fim);
+            
+            foreach($eventosInscritos as $key => $programacao) {
+                $hora_inicio = strtotime($programacao->hora_inicio);
+                $hora_fim = strtotime($programacao->hora_fim);
+                
+                if ($programacao->dia === $evento->dia && (($hora_inicio_evento < $hora_fim) || ($hora_fim_evento > $hora_inicio))) { 
+                    return response()->json([
+                        'error' => 'Usuário já inscrito em outra oficina neste horário.'
+                    ], Response::HTTP_NOT_FOUND);
+                }
+            }
+
+
             DB::insert('INSERT INTO `users_programacao` (`id_user`, `id_programacao`) VALUES (?, ?)', 
                 [$request->id_user, $request->id_programacao]);
 
