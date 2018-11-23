@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 use Mailgun\Mailgun;
-use App\Mail\ChangePassword;
+use App\Mail\ConfirmUserMail;
 
 class UsuarioController extends Controller
 {
