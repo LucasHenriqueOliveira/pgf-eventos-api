@@ -8,5 +8,5 @@ Nova senha
 @endcomponent
 
 Obrigado,<br>
-PFE - Eventos
+PFE/INSS - Eventos
 @endcomponent
