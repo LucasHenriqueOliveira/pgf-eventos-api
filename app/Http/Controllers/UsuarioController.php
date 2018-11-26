@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 use Mailgun\Mailgun;
 use App\Mail\ConfirmUserMail;
+use App\Mail\ChangePassword
 
 class UsuarioController extends Controller
 {
