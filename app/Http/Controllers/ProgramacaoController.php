@@ -272,8 +272,8 @@ class ProgramacaoController extends Controller
 
         $arrOficinas = DB::select("SELECT *, `programacao`.`id` AS `id_programacao` 
         FROM `programacao` INNER JOIN `palestrante` 
-        ON `programacao`.`id_palestrante` =  `palestrante`.`id` WHERE `programacao`.`ativo` = 1
-        AND `programacao`.`votacao` = 1 AND `programacao`.`tipo` = 'Oficina'
+        ON `programacao`.`id_palestrante` =  `palestrante`.`id` WHERE
+        `programacao`.`votacao` = 1 AND `programacao`.`tipo` = 'Oficina'
         ORDER BY `programacao`.`id` ASC");
 
         $arrList['oficinas'] = $arrOficinas;
