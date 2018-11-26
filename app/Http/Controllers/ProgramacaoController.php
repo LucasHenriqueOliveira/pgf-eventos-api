@@ -210,6 +210,15 @@ class ProgramacaoController extends Controller
                 }
             }
             */
+            $evento = DB::select("SELECT * FROM `programacao` WHERE `id` = ?", [$request->id_programacao])[0];
+            $users_programacao = DB::select("SELECT count(*) as qtd FROM `users_programacao` 
+                WHERE `id_programacao` = ? AND `ativo` = 1", [$request->id_programacao])[0];
+
+            if ($evento->vagas <= $users_programacao->qtd) {
+                return response()->json([
+                    'error' => 'Oficina com vagas esgotadas.'
+                ], Response::HTTP_NOT_FOUND);
+            }
 
 
             DB::insert('INSERT INTO `users_programacao` (`id_user`, `id_programacao`) VALUES (?, ?)', 
