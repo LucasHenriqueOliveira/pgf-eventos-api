@@ -189,6 +189,7 @@ class ProgramacaoController extends Controller
 
     public function setInscricao(Request $request) {
         try {
+            /*
             $evento = DB::select("SELECT * FROM `programacao` WHERE `id` = ?", [$request->id_programacao])[0];
             $eventosInscritos = DB::select("SELECT * FROM `users_programacao` INNER JOIN `programacao` 
                 ON `programacao`.`id` = `users_programacao`.`id_programacao` 
@@ -208,6 +209,7 @@ class ProgramacaoController extends Controller
                     ], Response::HTTP_NOT_FOUND);
                 }
             }
+            */
 
 
             DB::insert('INSERT INTO `users_programacao` (`id_user`, `id_programacao`) VALUES (?, ?)', 
