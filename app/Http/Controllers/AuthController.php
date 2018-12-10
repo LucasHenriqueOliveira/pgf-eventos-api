@@ -58,6 +58,10 @@ class AuthController extends Controller
         return app(\App\Http\Controllers\UsuarioController::class)->certificado($request);
     }
 
+    public function certificado() {
+        return app(\App\Http\Controllers\UsuarioController::class)->emailCertificado();
+    }
+
     /**
      * Get the authenticated User.
      *

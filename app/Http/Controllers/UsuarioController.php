@@ -113,7 +113,7 @@ class UsuarioController extends Controller
 
     // CERTIFICADOS
 
-    public function email(Request $request) {
+    public function emailCertificado() {
 
         $url = 'https://pfe-eventos-web.herokuapp.com/certificado';
 
