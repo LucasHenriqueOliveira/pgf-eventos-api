@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SignUpRequest;
 use App\Http\Requests\ResetPasswordRequest;
+use App\Http\Requests\CertificadoRequest;
 use App\User;
 
 class AuthController extends Controller
@@ -17,7 +18,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'signup', 'reset']]);
+        $this->middleware('auth:api', ['except' => ['login', 'signup', 'reset', 'certificado']]);
     }
 
     /**
@@ -51,6 +52,10 @@ class AuthController extends Controller
 
     public function reset(ResetPasswordRequest $request) {
         return app(\App\Http\Controllers\ResetPasswordController::class)->sendEmail($request);
+    }
+
+    public function certificado(CertificadoRequest $request) {
+        return app(\App\Http\Controllers\UsuarioController::class)->certificado($request);
     }
 
     /**

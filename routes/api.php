@@ -43,6 +43,9 @@ Route::group([
     Route::get('user/{id}', 'UsuarioController@getUser');
     Route::post('users/change-password', 'UsuarioController@passwordChange');
 
+    Route::get('email', 'Controller@email');
+    Route::post('certificado', 'AuthController@certificado');
+
     Route::post('login', 'AuthController@login');
     Route::post('signup', 'AuthController@signup');
     Route::post('logout', 'AuthController@logout');

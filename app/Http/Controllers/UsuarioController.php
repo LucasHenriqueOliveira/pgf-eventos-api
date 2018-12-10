@@ -109,4 +109,62 @@ class UsuarioController extends Controller
             'message' => 'Confira o seu email e valide o cadastro.'
         ], Response::HTTP_OK);
     }
+
+
+    // CERTIFICADOS
+
+    public function email(Request $request) {
+
+        $url = 'https://pfe-eventos-web.herokuapp.com/certificado';
+
+        $texto = '<br /> Prezado(a) ' . $name . ',';
+        $texto .= '<br /><br />Clique no link abaixo e informe o seu email para gerar o certificado:';
+        $texto .= '<br /><br /> <a href="'. $url .'">Certificado</a>';
+        $texto .= '<br /><br /> Att, <br />PFE INSS';
+        $texto .= '<br /><br /> <h5>Não responda a este email. Os emails enviados a este endereço não serão respondidos.</h5>';
+
+
+        $mg = Mailgun::create(getenv("MAILGUN_KEY"));
+
+        $users = DB::select("SELECT `name`, `email` FROM `users`");
+
+        foreach($users as $key => $user) {
+            if ($user->certificado) {
+                $mg->messages()->send(getenv("MAILGUN_DOMAIN"), [
+                    'from' => "PFE INSS <postmaster@cidadaniaativa.com.br>",
+                    'to'      => $email,
+                    'subject' => 'Certificado de Participação',
+                    'html'    => $texto
+                ]);
+            }
+        }
+
+    }
+
+    public function certificado(Request $request) {
+        $certificado = DB::select("SELECT `certificado` FROM `users` WHERE `email` = ?", [$request->email]);
+
+        if(count($certificado)) {
+            if(!$certificado[0]->certificado) {
+                return $this->failedResponseCertificado('Certificado não encontrado.');
+            } else {
+                return $this->successResponseCertificado($certificado[0]->certificado, '');
+            }
+        } else {
+            return $this->failedResponseCertificado('Usuário não encontrado.');
+        }
+    }
+
+    public function failedResponseCertificado($message){
+        return response()->json([
+            'error' => $message
+        ], Response::HTTP_NOT_FOUND);
+    }
+
+    public function successResponseCertificado($data, $message) {
+        return response()->json([
+            'data' => $data,
+            'message' => $message
+        ], Response::HTTP_OK);
+    }
 }
