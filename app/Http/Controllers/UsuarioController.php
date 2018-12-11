@@ -117,22 +117,22 @@ class UsuarioController extends Controller
 
         $url = 'https://pfe-eventos-web.herokuapp.com/certificado';
 
-        $texto = '<br /> Prezado(a) ' . $name . ',';
-        $texto .= '<br /><br />Clique no link abaixo e informe o seu email para gerar o certificado:';
-        $texto .= '<br /><br /> <a href="'. $url .'">Certificado</a>';
-        $texto .= '<br /><br /> Att, <br />PFE INSS';
-        $texto .= '<br /><br /> <h5>Não responda a este email. Os emails enviados a este endereço não serão respondidos.</h5>';
-
-
         $mg = Mailgun::create(getenv("MAILGUN_KEY"));
 
-        $users = DB::select("SELECT `name`, `email` FROM `users`");
+        $users = DB::select("SELECT `name`, `email`, `certificado` FROM `users`");
 
         foreach($users as $key => $user) {
             if ($user->certificado) {
+                $texto = '<br /> Prezado(a) ' . $user->name . ',';
+                $texto .= '<br /><br />Clique no link abaixo e informe o seu email para gerar o certificado:';
+                $texto .= '<br /><br /> <a href="'. $url .'">Certificado</a>';
+                $texto .= '<br /><br /> Att, <br />PFE INSS';
+                $texto .= '<br /><br /> <h5>Não responda a este email. Os emails enviados a este endereço não serão respondidos.</h5>';
+
+
                 $mg->messages()->send(getenv("MAILGUN_DOMAIN"), [
                     'from' => "PFE INSS <postmaster@cidadaniaativa.com.br>",
-                    'to'      => $email,
+                    'to'      => $user->email,
                     'subject' => 'Certificado de Participação',
                     'html'    => $texto
                 ]);

@@ -18,7 +18,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'signup', 'reset', 'certificado', 'email-certificado']]);
+        $this->middleware('auth:api', ['except' => ['login', 'signup', 'reset', 'certificado', 'email']]);
     }
 
     /**
@@ -58,7 +58,7 @@ class AuthController extends Controller
         return app(\App\Http\Controllers\UsuarioController::class)->certificado($request);
     }
 
-    public function emailCertificado() {
+    public function email() {
         return app(\App\Http\Controllers\UsuarioController::class)->emailCertificado();
     }
 
