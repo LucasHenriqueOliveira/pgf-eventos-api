@@ -139,6 +139,10 @@ class UsuarioController extends Controller
             }
         }
 
+        return response()->json([
+            'message' => 'OK'
+        ], Response::HTTP_OK);
+
     }
 
     public function certificado(Request $request) {
