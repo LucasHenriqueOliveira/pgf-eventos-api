@@ -43,7 +43,7 @@ Route::group([
     Route::get('user/{id}', 'UsuarioController@getUser');
     Route::post('users/change-password', 'UsuarioController@passwordChange');
 
-    Route::get('email-certificado', 'AuthController@emailCertificado');
+    Route::get('email', 'AuthController@email');
     Route::post('certificado', 'AuthController@certificado');
 
     Route::post('login', 'AuthController@login');
