@@ -37,6 +37,11 @@ Route::group([
     Route::put('uso', 'UsoController@edit');
     Route::delete('uso/{id}', 'UsoController@remove');
 
+    Route::get('participante', 'ParticipanteController@get');
+    Route::get('participante/{id}', 'ParticipanteController@getParticipante');
+
+    Route::get('avisos', 'AvisosController@get');
+
     Route::get('users/validar/{token}', 'UsuarioController@validarUser');
     Route::get('users/response-password-reset/{token}', 'UsuarioController@passwordReset');
     Route::get('users', 'UsuarioController@get');
